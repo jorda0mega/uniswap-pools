@@ -2,75 +2,36 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Link from 'next/link'
+import PoolList, {
+  ALL_POOLS_QUERY,
+  allPoolsQueryVars
+} from '../components/PoolList'
+import { addApolloState, initializeApollo } from '../lib/apolloClient'
 
-/* This example requires Tailwind CSS v2.0+ */
 const people = [
   { name: 'Jane Cooper', title: 'Regional Paradigm Technician', role: 'Admin', email: 'jane.cooper@example.com' },
   { name: 'Cody Fisher', title: 'Product Directives Officer', role: 'Owner', email: 'cody.fisher@example.com' },
-  // More people...
 ]
 
-export default function Example() {
+export default function Pools({ pools }) {
   return (
     <div className={styles.main}>
       <p className="font-medium py-2 text-left">All Pools</p>
-      <div className="flex flex-col">
-        <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Pool
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      TX Count
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      TVL (USD)
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Volume (USD)
-                    </th>
-                    <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {people.map((person, personIdx) => (
-                    <tr key={person.email} className={personIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{person.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.role}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PoolList />
     </div>
   )
 }
 
+export async function getStaticProps() {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: ALL_POOLS_QUERY,
+    variables: allPoolsQueryVars,
+  });
+
+  return addApolloState(apolloClient, {
+    props: {},
+    revalidate: 1
+  })
+}
