@@ -94,7 +94,8 @@ export default function PoolList() {
               <tbody>
                 {pools.map((pool, personIdx) => (
                   <tr key={pool.id} className={personIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pool.txCount}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pool.token0.symbol + "/" + pool.token1.symbol}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pool.txCount}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pool.totalValueLockedUSD}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pool.volumeUSD}</td>
                   </tr>
